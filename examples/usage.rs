@@ -1,5 +1,20 @@
 #![feature(try_blocks)]
-use error_return_trace::{MyResult, ReturnTrace};
+#![feature(min_specialization)]
+
+use error_return_trace::MyResult;
+use error_return_trace::Track;
+use std::panic::Location;
+
+#[derive(Debug, Default)]
+pub struct ReturnTrace {
+    frames: Vec<&'static Location<'static>>,
+}
+
+impl Track for ReturnTrace {
+    fn track(&mut self, location: &'static Location<'static>) {
+        self.frames.push(location);
+    }
+}
 
 fn main() {
     let trace = match one() {

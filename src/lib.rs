@@ -41,14 +41,3 @@ pub trait Track {
 default impl<T> Track for T {
     fn track(&mut self, _: &'static Location<'static>) {}
 }
-
-impl Track for ReturnTrace {
-    fn track(&mut self, location: &'static Location<'static>) {
-        self.frames.push(location);
-    }
-}
-
-#[derive(Debug, Default)]
-pub struct ReturnTrace {
-    frames: Vec<&'static Location<'static>>,
-}
