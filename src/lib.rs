@@ -1,5 +1,6 @@
 #![feature(track_caller)]
 #![feature(try_trait)]
+#![feature(specialization)]
 
 use std::panic::Location;
 
@@ -35,6 +36,10 @@ where
 
 pub trait Track {
     fn track(&mut self, location: &'static Location<'static>);
+}
+
+default impl<T> Track for T {
+    fn track(&mut self, _: &'static Location<'static>) {}
 }
 
 impl Track for ReturnTrace {
