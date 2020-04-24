@@ -3,9 +3,10 @@
 
 use error_return_trace::MyResult;
 use error_return_trace::Track;
+use std::fmt;
 use std::panic::Location;
 
-#[derive(Debug, Default)]
+#[derive(Default)]
 pub struct ReturnTrace {
     frames: Vec<&'static Location<'static>>,
 }
@@ -16,7 +17,18 @@ impl Track for ReturnTrace {
     }
 }
 
-fn main() -> Result<(), ReturnTrace> {
+impl fmt::Debug for ReturnTrace {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        writeln!(f, "ReturnTrace:")?;
+        for (i, frame) in self.frames.iter().enumerate() {
+            writeln!(f, "{:>2}: {}", i, frame)?;
+        }
+
+        Ok(())
+    }
+}
+
+fn main() -> MyResult<(), ReturnTrace> {
     try { one()? }
 }
 

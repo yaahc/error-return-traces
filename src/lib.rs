@@ -1,8 +1,10 @@
 #![feature(track_caller)]
 #![feature(try_trait)]
 #![feature(specialization)]
+#![feature(termination_trait_lib)]
 
 use std::panic::Location;
+use std::process::Termination;
 
 pub enum MyResult<T, E> {
     Ok(T),
@@ -40,4 +42,19 @@ pub trait Track {
 
 default impl<T> Track for T {
     fn track(&mut self, _: &'static Location<'static>) {}
+}
+
+impl<T, E> Termination for MyResult<T, E>
+where
+    E: std::fmt::Debug,
+{
+    fn report(self) -> i32 {
+        match self {
+            Self::Ok(_) => 0,
+            Self::Err(e) => {
+                println!("{:?}", e);
+                1
+            }
+        }
+    }
 }
