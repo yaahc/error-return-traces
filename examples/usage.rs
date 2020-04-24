@@ -16,13 +16,8 @@ impl Track for ReturnTrace {
     }
 }
 
-fn main() {
-    let trace = match one() {
-        MyResult::Ok(()) => unreachable!(),
-        MyResult::Err(trace) => trace,
-    };
-
-    println!("{:?}", trace);
+fn main() -> Result<(), ReturnTrace> {
+    try { one()? }
 }
 
 fn one() -> MyResult<(), ReturnTrace> {
